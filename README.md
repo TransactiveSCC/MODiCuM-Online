@@ -9,7 +9,7 @@
 
 # Project Layout
 * contract - contains smart contract and wrapper scripts for Modicum
-* Demo - contains install readme's, docker-compose files, example services, agent driver scripts (in `run` folder), and configuration for running the experiments. 
+* Demo - contains install readme's, docker-compose files, example services, agent driver scripts (in `run` folder), and configuration for running the experiments. **Also contains application code under service-examples/Carta-People-Counting**.
 * design - contains PlantUML sequence diagram for message sequence  
 * Dockerfiles - Contains the dockerfiles for the key Modicum components
 * Docs - strategy analysis
