@@ -1,0 +1,27 @@
+Method: setup	Start Time: 6:40:34.572
+End Time: 6:50:35.627
+Total setup functions called: 164
+Method: createAllocation	Start Time: 6:50:35.627 
+End Time: 7:00:37.274
+Total createAllocation functions called: 155
+Method: addSupplier	Start Time: 7:00:37.274
+End Time: 7:10:46.384
+Total addSupplier functions called: 136
+Method: mediatorSign	Start Time: 7:10:46.384
+End Time: 7:20:47.982
+Total mediatorSign functions called: 118
+Method: supplierSign	Start Time: 7:20:47.982
+End Time: 7:29:44.450
+Total supplierSign functions called: 118
+Method: customerSign	Start Time: 7:29:44.450
+End Time: 7:39:49.706
+Total customerSign functions called: 118
+Method: postOutput	Start Time: 7:39:49.706
+End Time: 7:49:51.115
+Total postOutput functions called: 107
+Method: postMediation	Start Time: 7:49:51.115
+End Time: 7:59:54.463
+Total postMediation functions called: 97
+Method: clearMarket	Start Time: 7:59:54.463
+End Time: 8:10:08.610
+Total clearMarket functions called: 90

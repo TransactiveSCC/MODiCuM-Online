@@ -1,0 +1,13 @@
+#docker-compose.yml
+version: '3'
+services:
+      stress_ng_service:
+        container_name: stress_ng_service
+        build:
+          context: ../../
+          dockerfile: service-examples/stress-ng/Stress-ng.Dockerfile
+        image: eiselesr/stress-ng-app
+networks:
+     default:
+       external:
+         name: mv2-default

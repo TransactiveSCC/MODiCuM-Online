@@ -1,0 +1,15 @@
+#docker-compose.yml
+version: '3.2'
+services:
+  frame-sink-service:
+    container_name: frame-sink
+    environment:
+      PYTHONUNBUFFERED: 1
+    build:
+      context: ../../../../
+      dockerfile: Demo/service-examples/Carta-People-Counting/frame_sink/imgSink.Dockerfile
+    image: ${REGISTRY}/frame-sink:${VERSION}
+networks:
+  default:
+    external:
+      name: mv2-default

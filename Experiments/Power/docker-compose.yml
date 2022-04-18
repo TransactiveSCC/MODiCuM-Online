@@ -1,0 +1,38 @@
+
+version: "3.7"
+services:
+  geth:
+    container_name: geth-miner
+    build:
+      context: .
+      dockerfile: geth.Dockerfile
+    ports:
+      - "30303:30303"
+      - "8545:8545"
+    cap_add:
+      - NET_RAW
+      - NET_ADMIN
+    volumes:
+      - type: volume
+        source: gethdata
+        target: /gethdata
+  truffle:
+    container_name: truffle-suite
+    build:
+      context: .
+      dockerfile: truffle.Dockerfile
+      # context: .
+      # dockerfile: truffle.Dockerfile
+    working_dir: /home/app
+    #command:
+    #  - "/bin/bash"
+    #  - "-c"
+    #  - "export IP=$$(host geth | awk '{print $$4}'); truffle console"
+    stdin_open: true # docker run -i
+    tty: true # docker run -t
+networks:
+      default:
+        external:
+          name: mv2-default
+volumes:
+  gethdata:

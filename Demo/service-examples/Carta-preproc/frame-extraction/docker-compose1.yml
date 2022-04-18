@@ -1,0 +1,19 @@
+#docker-compose.yml
+version: '3.2'
+services:
+  docker1:
+    container_name: first
+    build:
+      context: ../../
+      dockerfile: service-examples/Carta-People-Counting/docker1
+    volumes:
+      - type: bind
+        source: /home/ksilv/Github/MV2/Demo/service-examples/Carta-People-Counting/docker-data/input
+        target: /usr/src/app/input
+      - type: bind
+        source: /home/ksilv/Github/MV2/Demo/service-examples/Carta-People-Counting/docker-data
+        target: /usr/src/app
+networks:
+  default:
+    external:
+      name: mv2-default

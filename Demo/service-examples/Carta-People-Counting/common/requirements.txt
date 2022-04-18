@@ -1,0 +1,9 @@
+tensorflow
+numpy
+pandas
+sklearn
+matplotlib
+h5py
+keras
+pulsar-client~=2.7.2
+opencv-python-headless

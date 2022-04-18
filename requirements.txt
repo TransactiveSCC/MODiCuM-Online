@@ -1,0 +1,14 @@
+termcolor~=1.1.0
+requests~=2.22.0
+setuptools~=45.2.0
+docker~=4.1.0
+tqdm~=4.60.0
+MV2~=0.0.1
+hopcroftkarp~=1.2.5
+numpy~=1.20.3
+influxdb~=5.3.1
+Click~=7.0
+pyzmq~=22.0.3
+pulsar_client~=2.7.2
+opencv-python
+natstat

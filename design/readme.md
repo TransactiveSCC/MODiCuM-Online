@@ -1,0 +1,2 @@
+# Contents
+* sequenceDiagram.puml - a PlantUML file which draws the sequence diagram for the platform workflow. One way to view the diagram is to paste it into a [PlantUML Server](http://www.plantuml.com/plantuml). We also include an svg of the diagram.

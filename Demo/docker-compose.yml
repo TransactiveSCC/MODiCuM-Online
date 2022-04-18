@@ -1,0 +1,86 @@
+#docker-compose.yml
+version: '3'
+services:
+      allocator-service:
+        container_name: docker_allocator_service
+        environment:
+          PYTHONUNBUFFERED: 1
+        build:
+          context: ../
+          dockerfile: Dockerfiles/Allocator.Dockerfile
+        image: ${REGISTRY}/allocator:${VERSION}
+
+      verifier-service:
+        container_name: docker_verifier_service
+        environment:
+          PYTHONUNBUFFERED: 1
+        build:
+          context: ../
+          dockerfile: Dockerfiles/Verifier.Dockerfile
+        image: ${REGISTRY}/verifier:${VERSION}
+
+      mediator-service:
+        container_name: docker_mediator_service
+        volumes:
+          - /var/run/docker.sock:/var/run/docker.sock
+        environment:
+          PYTHONUNBUFFERED: 1
+        build:
+          context: ../
+          dockerfile: Dockerfiles/Mediator.Dockerfile
+        image: ${REGISTRY}/mediator:${VERSION}
+
+      sporadic-customer:
+        container_name: docker-sporadic-customer
+        volumes:
+          - /var/run/docker.sock:/var/run/docker.sock
+        environment:
+          PYTHONUNBUFFERED: 1
+        build:
+          context: ../
+          dockerfile: Dockerfiles/Customer.Dockerfile
+        image: ${REGISTRY}/customer:${VERSION}
+        command:
+          - python
+          - /demo/customer_run.py
+          - sporadic
+
+#      nominal-supplier:
+#        container_name: docker-nominal-supplier
+#        volumes:
+#          - /var/run/docker.sock:/var/run/docker.sock
+#        environment:
+#          PYTHONUNBUFFERED: 1
+#        build:
+#          context: ../
+#          dockerfile: Dockerfiles/Supplier.Dockerfile
+#        image: ${REGISTRY}/supplier:${VERSION}
+#        command:
+#          - python
+#          - /demo/supplier_run.py
+#          - multi_s
+#          - nominal
+
+      lazy-supplier:
+        container_name: docker-lazy-supplier
+        volumes:
+          - /var/run/docker.sock:/var/run/docker.sock
+        environment:
+          PYTHONUNBUFFERED: 1
+        build:
+          context: ../
+          dockerfile: Dockerfiles/Supplier.Dockerfile
+        image: ${REGISTRY}/supplier:${VERSION}
+        command:
+          - python
+          - /demo/supplier_run.py
+          - multi_s
+          - lazy
+          - "--Ps"
+          - '.5'
+
+
+networks:
+      default:
+        external:
+          name: mv2-default

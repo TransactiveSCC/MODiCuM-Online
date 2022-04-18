@@ -1,0 +1,179 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+skinparam BoxPadding 40
+
+autonumber
+
+
+box Customer
+participant customer
+participant c_fulfill
+end box
+
+queue "c_id/market/app_aid"
+queue "c_id/market/input_aid"
+queue "c_id/market/cleanup_aid"
+box Trusted Compute Base
+participant Verifier
+end box
+queue "c_id/market/output_aid"
+queue "public/market/\naccept"
+
+box Supplier
+participant supplier
+participant s_fulfill
+participant app
+end box
+
+box Mediator
+participant mediator
+participant m_fulfill
+end box
+
+queue "public/market/\ncustomer_offers"
+queue "public/market/\nsupplier_offers"
+box "Allocator"
+participant allocator
+participant allocation_process
+end box
+queue "public/market/\nallocations"
+
+customer -> "public/market/\ncustomer_offers": post_offer
+activate "public/market/\ncustomer_offers"
+"public/market/\ncustomer_offers" --> allocator: msg
+deactivate "public/market/\ncustomer_offers"
+activate allocator
+allocator -> allocation_process: process_customer_offer
+deactivate allocator
+
+
+activate allocation_process
+
+autonumber
+supplier -> "public/market/\nsupplier_offers": offer_topic: post_offer
+activate "public/market/\nsupplier_offers"
+"public/market/\nsupplier_offers" --> allocator:msg
+deactivate "public/market/\nsupplier_offers"
+activate allocator
+allocator -> allocation_process --: process_supplier_offers
+allocation_process -> "public/market/\nallocations": allocate
+deactivate allocator
+
+deactivate allocation_process
+
+
+activate "public/market/\nallocations"
+
+"public/market/\nallocations" --> customer: allocation
+activate customer
+'autonumber 5
+
+"public/market/\nallocations" --> supplier: allocation
+activate supplier
+
+"public/market/\nallocations" --> mediator: allocation
+deactivate "public/market/\nallocations"
+activate mediator
+
+
+customer -> customer: eval_allocation
+supplier -> supplier: eval_allocation
+mediator -> mediator: eval_allocation
+
+activate "public/market/\naccept"
+    customer -> "public/market/\naccept": status
+    activate "public/market/\naccept"
+    supplier -> "public/market/\naccept": status
+    mediator -> "public/market/\naccept": status
+    deactivate "public/market/\naccept"
+
+
+    "public/market/\naccept" --> supplier: status
+    activate "public/market/\naccept"
+    "public/market/\naccept" --> customer: status
+    "public/market/\naccept" --> "mediator": status
+    "public/market/\naccept" --> "allocator": status
+        activate "allocator"
+        "allocator" -[#blue]> Verifier:createAllocation
+'        deactivate "allocator"
+        activate Verifier
+    deactivate "public/market/\naccept"
+
+deactivate "public/market/\naccept"
+
+
+supplier -> s_fulfill**: start
+deactivate supplier
+customer -> c_fulfill**: start
+deactivate customer
+mediator -> m_fulfill**: start
+deactivate mediator
+
+s_fulfill -> "c_id/market/output_aid"**
+
+c_fulfill -> "c_id/market/app_aid"**
+c_fulfill -> "c_id/market/input_aid"**
+c_fulfill -> "c_id/market/cleanup_aid"**
+
+c_fulfill -[#blue]> Verifier:customerSign
+s_fulfill -[#blue]> Verifier:supplierSign
+
+c_fulfill -> "c_id/market/app_aid":app
+activate "c_id/market/app_aid"
+"c_id/market/app_aid" --> m_fulfill:app
+"c_id/market/app_aid" --> s_fulfill:app
+deactivate "c_id/market/app_aid"
+activate s_fulfill
+s_fulfill -> app: setup
+deactivate s_fulfill
+
+
+
+loop
+    c_fulfill -> "c_id/market/input_aid":input
+    activate "c_id/market/input_aid"
+    "c_id/market/input_aid" --> m_fulfill:input
+    "c_id/market/input_aid" --> app:input
+    deactivate "c_id/market/input_aid"
+    activate app
+    app -> app: process
+    app -> "c_id/market/output_aid":output
+    activate "c_id/market/output_aid"
+    "c_id/market/output_aid" --> c_fulfill:output
+    "c_id/market/output_aid" --> m_fulfill:output
+    "c_id/market/output_aid" --> s_fulfill:output
+    activate s_fulfill
+    s_fulfill --> s_fulfill:hash_output
+    deactivate s_fulfill
+    deactivate "c_id/market/output_aid"
+    deactivate app
+end
+
+allocator -> "c_id/market/cleanup_aid":cleanup
+deactivate "allocator"
+'c_fulfill -> "c_id/market/cleanup_aid":cleanup
+activate "c_id/market/cleanup_aid"
+"c_id/market/cleanup_aid" -> c_fulfill:cleanup
+"c_id/market/cleanup_aid" -> supplier:cleanup
+deactivate "c_id/market/cleanup_aid"
+
+destroy c_fulfill
+destroy "c_id/market/app_aid"
+destroy "c_id/market/input_aid"
+destroy "c_id/market/output_aid"
+destroy "c_id/market/cleanup_aid"
+
+s_fulfill -[#blue]> Verifier:postOutput
+destroy s_fulfill
+Verifier -[#blue]> Verifier: compare
+Verifier -[#blue]> Verifier: ClearMarket
+Verifier --[#blue]> customer: ClearMarket
+Verifier --[#blue]> supplier: ClearMarket
+Verifier --[#blue]> mediator: ClearMarket
+destroy m_fulfill
+
+
+deactivate Verifier
+
+@enduml

@@ -1,0 +1,30 @@
+version: "3.7"
+services:
+  pulsar:
+    container_name: docker_pulsar_1
+    image: apachepulsar/pulsar-all:2.7.0
+    command: bin/pulsar standalone
+    volumes:
+      - type: bind
+        source: ../shared
+        target: /pulsar/shared
+      - type: volume
+        source: pulsardata
+        target: /pulsar/data
+      - type: volume
+        source: pulsarconf
+        target: /pulsar/conf
+    ports:
+      - "6650:6650"
+      - "8080:8080"
+    cap_add:
+      - NET_RAW
+      - NET_ADMIN
+#  mv:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    image: mv
+volumes:
+  pulsardata:
+  pulsarconf:

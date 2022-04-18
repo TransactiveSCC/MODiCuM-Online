@@ -1,0 +1,11 @@
+passphrase.txt
+logs/
+.git
+*.md
+.cache
+node_modules
+**/Carta-preproc
+**/docker-compose.yml
+bin/
+contract/
+venv/

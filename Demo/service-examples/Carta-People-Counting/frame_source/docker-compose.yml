@@ -1,0 +1,19 @@
+#docker-compose.yml
+version: '3.2'
+services:
+  frame-source-service:
+    container_name: frame-source
+    environment:
+      PYTHONUNBUFFERED: 1
+    build:
+      context: ../../../../
+      dockerfile: Demo/service-examples/Carta-People-Counting/frame_source/imgSrc.Dockerfile
+    image: ${REGISTRY}/frame-source:${VERSION}
+    #volumes:
+    #  - type: bind
+    #    source: /Volumes/external_drive/Code/MV2/Demo/service-examples/Carta-preproc/frames-dev
+    #    target: /demo/app/frames
+networks:
+  default:
+    external:
+      name: mv2-default

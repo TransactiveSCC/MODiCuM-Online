@@ -1,0 +1,14 @@
+FROM python:3
+
+RUN apt-get update && apt-get install -y wget ca-certificates \
+  git curl vim python3-dev python3-pip \
+  libfreetype6-dev libhdf5-dev
+
+RUN python3 -m pip install --upgrade pip
+RUN apt-get update && apt-get install -y python3-opencv
+RUN pip install opencv-python
+
+WORKDIR /usr/src/app
+
+CMD ["image_extraction.py"]
+ENTRYPOINT ["python3"]
